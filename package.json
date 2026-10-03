@@ -1,0 +1,7 @@
+{
+  "name": "cognitive-workspace",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev --prefix frontend"
+  }
+}
