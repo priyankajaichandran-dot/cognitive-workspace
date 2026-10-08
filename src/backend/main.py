@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from auth import verify_jwt
+from .auth import verify_jwt
 
 app = FastAPI(title="Cognitive Workspace API")
 
