@@ -12,7 +12,6 @@ app.add_middleware(
 )
 
 @app.get("/")
-<<<<<<< HEAD
 def root():
     return {"message": "Backend ON da thalaiva!"}
 
@@ -23,16 +22,17 @@ def health():
 @app.get("/api/protected")
 def protected():
     return {"message": "Protected route work aaguthu da!"}
-=======
-def health_check():
-    return {
-        "status": "healthy",
-        "project": "Cognitive Workspace"
-    }
-    @app.get("/api/v1/task-1-1-2-3")
+
+@app.get("/api/v1/task-1-1-2-3")
 def task_1_1_2_3():
     return {
         "status": "completed",
         "message": "Backend sub-task 1.1.2.3 endpoint successfully created!"
     }
->>>>>>> 173ba76e75aafef9c2e42161b8feefde5c2257fd
+
+@app.get("/health")
+def health_check():
+    return {
+        "status": "healthy",
+        "project": "Cognitive Workspace"
+    }
