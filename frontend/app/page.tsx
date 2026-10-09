@@ -1,56 +1,75 @@
-"use client"
-import { useState } from "react"
-
-const API_URL = "http://127.0.0.1:8000"
+"use client";
+import { useState, useEffect } from "react";
 
 export default function Home() {
-  const [token, setToken] = useState("")
-  const [loggedEmail, setLoggedEmail] = useState("test@test.com")
-  const [response, setResponse] = useState("")
+  const [response, setResponse] = useState("");
+  const [email, setEmail] = useState("test@test.com");
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
-  const handleLogin = async () => {
-    try {
-      const res = await fetch(`${API_URL}/api/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: "test@test.com", password: "123456" })
-      })
-      const data = await res.json()
-      setToken(data.token)
-      localStorage.setItem("token", data.token)
-      setResponse(JSON.stringify(data))
-    } catch (e) {
-      setResponse("Login fail: " + String(e))
-    }
-  }
+  // Backend URL - un Vercel URL ah inga potuko da
+  const BACKEND_URL = "https://cognitive-workspace-vb1x.vercel.app"; 
+  // Local ku: "http://localhost:8000"
 
   const callBackend = async () => {
-    const res = await fetch(`${API_URL}/api/health`)
-    const data = await res.json()
-    setResponse(JSON.stringify(data))
-  }
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/health`);
+      const data = await res.json();
+      setResponse(JSON.stringify(data, null, 2));
+    } catch (err) {
+      setResponse("Error: Backend not connected");
+    }
+  };
 
-  const callProtected = async () => {
-    const savedToken = localStorage.getItem("token") || token || "thalaiva_token_123"
-    const res = await fetch(`${API_URL}/api/protected`, {
-      headers: { "Authorization": `Bearer ${savedToken}` }
-    })
-    const data = await res.json()
-    setResponse(JSON.stringify(data))
-  }
+  const testProtectedRoute = async () => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/protected`);
+      const data = await res.json();
+      setResponse(JSON.stringify(data, null, 2));
+    } catch (err) {
+      setResponse("Error: Protected route failed");
+    }
+  };
+
+  const handleLogin = () => {
+    setIsLoggedIn(!isLoggedIn);
+    setResponse(isLoggedIn ? "Logged out" : "Logged in as test@test.com");
+  };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Cognitive Workspace Da 🧠</h2>
-      <p>✅ Logged in da: {loggedEmail}</p>
-      <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
-        <button onClick={callBackend} style={{ padding: "10px", background: "#0d6efd", color: "white", border: "none", borderRadius: "5px" }}>Backend ah Koopu Da</button>
-        <button onClick={callProtected} style={{ padding: "10px", background: "#000", color: "white", border: "none", borderRadius: "5px" }}>Protected Route Test Da</button>
-        <button onClick={handleLogin} style={{ padding: "10px", background: "#333", color: "white", border: "none", borderRadius: "5px" }}>Login Pannu Da</button>
+    <div style={{ padding: "20px", fontFamily: "Arial" }}>
+      <h1>Cognitive Workspace 🧠</h1>
+      
+      {isLoggedIn && (
+        <p style={{ color: "green" }}>✅ Logged in as: {email}</p>
+      )}
+
+      <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
+        <button 
+          onClick={callBackend}
+          style={{ background: "#0070f3", color: "white", padding: "10px 15px", border: "none", borderRadius: "5px", cursor: "pointer" }}
+        >
+          Call Backend
+        </button>
+
+        <button 
+          onClick={testProtectedRoute}
+          style={{ background: "black", color: "white", padding: "10px 15px", border: "none", borderRadius: "5px", cursor: "pointer" }}
+        >
+          Test Protected Route
+        </button>
+
+        <button 
+          onClick={handleLogin}
+          style={{ background: "#333", color: "white", padding: "10px 15px", border: "none", borderRadius: "5px", cursor: "pointer" }}
+        >
+          {isLoggedIn ? "Logout" : "Login"}
+        </button>
       </div>
-      <div style={{ marginTop: "20px", background: "#dbeafe", padding: "10px" }}>
-        Response: {response}
+
+      <div style={{ marginTop: "20px", background: "#e6f0ff", padding: "15px", borderRadius: "5px" }}>
+        <strong>Response:</strong>
+        <pre style={{ marginTop: "10px", whiteSpace: "pre-wrap" }}>{response}</pre>
       </div>
     </div>
-  )
+  );
 }

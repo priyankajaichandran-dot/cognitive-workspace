@@ -13,15 +13,15 @@ app.add_middleware(
 
 @app.get("/")
 def root():
-    return {"message": "Backend ON da thalaiva!"}
+    return {"message": "Backend is running!"}
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "message": "Backend connect aayiduchu da!"}
+    return {"status": "ok", "message": "Backend connected successfully!"}
 
 @app.get("/api/protected")
 def protected():
-    return {"message": "Protected route work aaguthu da!"}
+    return {"message": "Protected route is working!"}
 
 @app.get("/api/v1/task-1-1-2-3")
 def task_1_1_2_3():
